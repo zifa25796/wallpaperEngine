@@ -3,7 +3,7 @@
 
 
 int main() {
-	LPCWSTR lpParam = L" videoTest.mp4 -noborder -x 1920 -y 1080  -loop 0";
+	LPCWSTR lpParam = L" videoTest2.mp4 -noborder -fs -loop 0";
 	STARTUPINFO si{ 0 };
 	PROCESS_INFORMATION pi{ 0 };
 
@@ -12,12 +12,17 @@ int main() {
 
 		HWND hProgram = FindWindow(_T("Progman"), _T("Program Manager"));
 		HWND hFfplay = FindWindow(L"SDL_app", 0);
-		SetParent(hFfplay, hProgram);
 
+		MoveWindow(hFfplay, 0, 0, 1920, 1080, true);
+		// SetWindowPos(hFfplay, NULL, 0, 0, 3840, 1080, SWP_NOZORDER);
+		ShowWindow(hFfplay, SW_MAXIMIZE);
+
+		Sleep(400);
+		SetParent(hFfplay, hProgram);
 
 		EnumWindows(EnumWindowProc, (LPARAM)SW_HIDE);
 
-		Sleep(1000);
+		Sleep(100000);
 
 		EnumWindows(EnumWindowProc, (LPARAM)SW_SHOW);
 	}
