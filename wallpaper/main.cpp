@@ -7,14 +7,13 @@ int main() {
 	STARTUPINFO si{ 0 };
 	PROCESS_INFORMATION pi{ 0 };
 
-	if (CreateProcess(L"ffplay.exe", (LPWSTR)lpParam, 0, 0, 0, 0, 0, 0, &si, &pi)) {
+	if (CreateProcess(L"ffplay.exe", (LPWSTR)lpParam, 0, 0, 0, CREATE_NO_WINDOW, 0, 0, &si, &pi)) {
 		Sleep(200);
 
 		HWND hProgram = FindWindow(_T("Progman"), _T("Program Manager"));
 		HWND hFfplay = FindWindow(L"SDL_app", 0);
 
 		MoveWindow(hFfplay, 0, 0, 1920, 1080, true);
-		// SetWindowPos(hFfplay, NULL, 0, 0, 3840, 1080, SWP_NOZORDER);
 		ShowWindow(hFfplay, SW_MAXIMIZE);
 
 		Sleep(400);
@@ -22,8 +21,8 @@ int main() {
 
 		EnumWindows(EnumWindowProc, (LPARAM)SW_HIDE);
 
-		Sleep(100000);
-
+		Sleep(5000);
+		TerminateProcessByHWND(hFfplay, 0);
 		EnumWindows(EnumWindowProc, (LPARAM)SW_SHOW);
 	}
 	else {
@@ -40,4 +39,12 @@ BOOL CALLBACK EnumWindowProc(_In_ HWND hwnd, _In_ LPARAM lparam) {
 		return FALSE;
 	}
 	return TRUE;
+}
+
+
+void TerminateProcessByHWND(HWND hwnd, DWORD exitCode) {
+	DWORD pid = 0;
+	GetWindowThreadProcessId(hwnd, &pid);
+	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+	TerminateProcess(hProcess, exitCode);
 }

@@ -6,3 +6,5 @@
 #include <tchar.h>
 
 BOOL CALLBACK EnumWindowProc(_In_ HWND hwnd, _In_ LPARAM lparam);
+
+void TerminateProcessByHWND(HWND hwnd, DWORD exitCode);
